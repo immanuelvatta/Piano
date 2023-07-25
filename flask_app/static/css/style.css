@@ -1,0 +1,100 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.piano{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    background: white;
+}
+
+.wrapper{
+    width: 800px;
+    border-radius: 20px;
+    padding:  35px 40px;
+    background: #010101;
+    background: linear-gradient(to bottom, #3d3d3d 50%, black 100%);
+}
+
+header h2{
+    font-size:  1.6rem;
+    color: ivory;
+}
+
+header .column span {
+    font-weight: 500;
+    font-size: 1.20 rem;
+    color: ivory
+}
+.volume-slider input{
+    accent-color: ivory;
+}
+
+.keys-checkbox input{
+    cursor: pointer;
+}
+
+.piano-keys .key{
+    color: #adb5bd;
+    position: relative;
+    list-style: none;
+    user-select: none;
+}
+
+.piano-keys .white {
+    width: 70px;
+    height:230px;
+    /* border-radius:8px; */
+    border: 1px solid black ;
+    background: linear-gradient(ivory 95%, gray 5%);
+}
+
+.piano-keys .white.active {
+    box-shadow: inset -5px 5px 20px rgba(0,0,0,0.4);
+    background: linear-gradient(to bottom, ivory 0%, gray 100%);
+}
+
+.piano-keys .black {
+    width: 44px;
+    height:140px;
+    border-radius: 0 0 5px 5px;
+    /* negative margin saves lives for black keys*/
+    margin: 0 -15px;
+    z-index: 2;
+    background: linear-gradient(#222 95%, rgb(21, 21, 21) 5%);
+}
+
+.piano-keys .black.active {
+    box-shadow: inset -5px 5px 10px rgba(255,255,255,0.4);
+    background: linear-gradient(#222 0%, rgb(21, 21, 21) 100%);
+}
+
+.piano-keys span{
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.glow{
+    color: white;
+    text-shadow: white 0 0 10px;
+}
+.fa-solid{
+    color: ivory;
+}
+
+.form-select{
+    color: white;
+    text-shadow: white 0 0 5px;
+    text-align: center;
+}
+
+.piano-keys .key.hide span{
+    display: none;
+}
