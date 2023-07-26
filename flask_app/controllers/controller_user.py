@@ -1,5 +1,4 @@
 from flask_app import app, bcrypt
-
 from flask import render_template, redirect, request, session
 
 #TODO change this
@@ -37,7 +36,6 @@ def user_login():
     else:
         session['email'] = is_valid
     return redirect('/user/dashboard')
-
 
 @app.route('/user/dashboard')
 def success():
