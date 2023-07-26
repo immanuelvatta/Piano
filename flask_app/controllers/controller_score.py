@@ -14,55 +14,50 @@ def score_new():
 
 @app.route('/score/create' , methods= ['POST'])
 def score_create():
-    
     # Get the uploaded music sheet from the request
     music_sheet = request.files['music_sheet']
-    
     # Read the content of the music sheet
     music_sheet_content = music_sheet.read()
     # Define the path to save the PDF file temporarily
     pdf_file_path = f"temp/{music_sheet.filename}"
-    
-    # Check if the 'temp' directory exists, create it if not
+    # Check if the 'temp' directory exists, if it doesn't then creates it
     if not os.path.exists('temp'):
         os.makedirs('temp')
-        
     # Save the music sheet content to a temporary PDF file
     with open(pdf_file_path, 'wb') as file:  # Use 'wb' mode to save the PDF file in binary mode
         file.write(music_sheet_content)
-    
     # Create a dictionary 'data' with the form data and music sheet content
     data = {
         **request.form,
         'music_sheet': music_sheet_content
     }
+    # Validate the score data using the 'score_validator' function
     if not Score.score_validator(data):
+        # If the data is not valid, remove the temporary PDF file and redirect the user to the '/score/new' page
+        os.remove(pdf_file_path)  # Remove the temporary PDF file
         return redirect('/score/new')
-    
     # If the data is valid, create a new score using the 'create' function
     Score.create(data)
     # After successfully creating the score, redirect the user to the '/user/dashboard' page
+    os.remove(pdf_file_path)  # Remove the temporary PDF file
     return redirect('/user/dashboard')
 
 
 @app.route('/score/display/<int:id>')
 def score_display(id):
-    
     # Retrieve the score with the given 'id' from the database
     score = Score.get_one_score(id)
     # Check if the score with the given 'id' exists
     if not score:
         # If the score is not found, return a "Score not found" message with 404 status code
         return "Score not found", 404
-    
     # Prepare headers for the HTTP response to specify the PDF content type and filename
     headers = {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': f'inline; filename="{score.name}.pdf"'
+        'Content-Type' : 'application/pdf',
+        'Content-Disposition' : f'inline; filename="{score.name}.pdf"'
     }
     # Create a response with the PDF content and headers
     response = Response(score.music_sheet, headers=headers)
-    
     # Return the response to display the score PDF in the browser
     return response
 
