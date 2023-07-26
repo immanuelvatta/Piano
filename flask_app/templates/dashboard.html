@@ -11,61 +11,64 @@
 </head>
 
 <body data-bs-theme="dark">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <h2>Home</h2>
+            <h2 class="text-light">Home</h2>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <h4 class="me-3 text-warning"> Welcome {{user.full_name}} <i class="fa-solid fa-music fa-shake"></i>
-                </h4>
-                <a href="/score/new"><button class="btn btn-success me-2"><i class="fa-solid fa-plus fa-flip"></i> Add
-                        Music <i class="fa-solid fa-music fa-beat"></i></button></a>
-                <a href="/user/logout"><button class="btn btn-danger me-2">Logout <i
-                            class="fa-solid fa-right-from-bracket fa-fade"></i></button></a>
+                <a class="me-3 nav-link disabled text-light" aria-disabled="true">User : {{user.first_name}} <i
+                        class="fa-solid fa-music"></i>
+                </a>
+                <a class="navbar-brand" href="/score/new">Add
+                    Music <i class="fa-solid fa-plus fa-flip"></i> </a>
+                <a class="navbar-brand" href="/user/logout">Logout <i
+                        class="fa-solid fa-right-from-bracket fa-fade"></i></a>
             </div>
         </div>
     </nav>
 
 
 
-    <h4 class="mt-5 text-center text-info">Music Wall🎼</h4>
+    <h4 class="mt-5 text-center text-light">Music Wall🎼</h4>
     <div class="mt-5 container">
-        <table
-            class="table table-dark table-striped table-hover table-danger border border-light border-3 border-end-0 border-start-0">
-            <thead>
-                <tr>
-                    <th class="text-center" scope="col">Name of Musical Composition</th>
-                    <th class="text-center" scope="col">Composer</th>
-                    <th class="text-center" scope="col">Added By</th>
-                    <th class="ps-4" scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for score in scores %}
-                <tr>
-                    <td class="text-center">{{score.name}}</td>
-                    <td class="text-center">{{score.composer}}</td>
-                    <td class="text-center">{{score.user.full_name}}</td>
-                    <td scope="col"><a href="/score/view/{{score.id}}"><button class="btn btn-primary me-2">View <i
-                                    class="fa-solid fa-eye fa-spin"></i></button></a>
-                        {% if user.id == score.user_id %}
-                        <a href="/score/edit/{{score.id}}"><button class="btn btn-warning me-2"> Edit <i
-                                    class="fa-solid fa-pen-to-square fa-shake"></i> </button></a>
-                        <a href="/score/delete/{{score.id}}"><button class="btn btn-danger me-2">Delete <i
-                                    class="fa-solid fa-trash-can fa-beat-fade"></i></button></a>
-                    </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table class="table table-dark table-striped table-hover table-danger border border-light border-3 border-end-0 border-start-0">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">Name of Musical Composition</th>
+                        <th class="text-center" scope="col">Composer</th>
+                        <th class="text-center" scope="col">Added By</th>
+                        <th class="ps-4" scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for score in scores %}
+                    <tr>
+                        <td class="text-center">{{score.name}}</td>
+                        <td class="text-center">{{score.composer}}</td>
+                        <td class="text-center">{{score.user.full_name}}</td>
+                        <td scope="col"><a href="/score/view/{{score.id}}"><button class="btn btn-outline-light me-2">View
+                                    <i class="fa-solid fa-eye"></i></button></a>
+                            {% if user.id == score.user_id %}
+                            <a href="/score/edit/{{score.id}}"><button class="btn btn-outline-light me-2"> Edit <i
+                                        class="fa-solid fa-pen-to-square"></i> </button></a>
+                            <a href="/score/delete/{{score.id}}"><button class="btn btn-outline-light me-2">Delete <i
+                                        class="fa-solid fa-trash-can"></i></button></a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
     </div>
 
     <div class="container mt-5">
         <div class="piano">
             <div class="wrapper">
-                <h2  class="mb-2">V.Piano α <i class="fa-brands fa-itunes-note fa-bounce"></i></h2>
+                <h2 class="mb-2">V.Piano α <i class="fa-brands fa-itunes-note fa-bounce"></i></h2>
                 <header class="d-flex align-items-center justify-content-between">
-                    
+
                     <div class="column d-flex align-items-center">
                         <button id="start-audio" class="btn glow"><i class="fa-solid fa-power-off"></i></button>
                         <span class="me-2 text-center"><label for="oscillator-type">Sound</label></span>
@@ -75,14 +78,16 @@
                             <option value="sawtooth">03: Sawtooth</option>
                             <option value="triangle">04: Triangle</option>
                         </select>
-                        
+
                     </div>
                     <div class="column volume-slider d-flex align-items-center">
-                        <span class="me-2">Volume</span> <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
+                        <span class="me-2">Volume</span> <input type="range" id="volume-slider" min="0" max="1"
+                            step="0.01" value="0.5">
                     </div>
                     <div class="column keys-checkbox form-check form-switch">
-                        <input class="form-check-input opacity-10 bg-dark border border-light" role="switch" type="checkbox">
-                        <span class="me-2">Hide Keys</span> 
+                        <input class="form-check-input opacity-10 bg-dark border border-light" role="switch"
+                            type="checkbox">
+                        <span class="me-2">Hide Keys</span>
                     </div>
                 </header>
                 <ul class="d-flex mt-5 piano-keys list-unstyled text-uppercase justify-content-center">
@@ -111,8 +116,8 @@
                     <li class="key black rounded-bottom" data-note="l"><span>l</span></li>
                     <li class="key white rounded-bottom" data-note="."><span>.</span></li>
                     <li class="key white rounded-bottom" data-note="/"><span>/</span></li>
-                    
-                    
+
+
 
                 </ul>
             </div>
