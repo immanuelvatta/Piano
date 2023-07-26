@@ -77,3 +77,59 @@ def score_view(id):
         return "Score not found", 404
     # Render the 'display_score.html' template with the user and score data
     return render_template('display_score.html', user=user, score=score)
+
+@app.route('/score/edit/<int:id>')
+def score_edit(id):
+    if not session:
+        return redirect('/')
+    user = User.get_one(session['email'])
+    score = Score.get_one(id)
+    return render_template('edit_score.html', user=user, score = score)
+
+
+@app.route('/score/updated/<int:id>', methods=["POST"])
+def score_update(id):
+    
+    if not session:
+        # If not logged in, redirect to the homepage
+        return redirect('/')
+    # Retrieve the existing score data from the database
+    score = Score.get_one_score(id)
+    if not score:
+        # If score not found, return a 404 error
+        return "Score not found", 404 
+    # Get the uploaded music sheet from the request
+    music_sheet = request.files['music_sheet']
+    # Read the content of the music sheet
+    music_sheet_content = music_sheet.read()
+    # Define the path to save the PDF file temporarily
+    pdf_file_path = f"temp/{music_sheet.filename}"
+    # Check if the 'temp' directory exists, if it doesn't then creates it
+    if not os.path.exists('temp'):
+        os.makedirs('temp')
+    # Save the music sheet content to a temporary PDF file
+    with open(pdf_file_path, 'wb') as file:  # Use 'wb' mode to save the PDF file in binary mode
+        file.write(music_sheet_content)
+    # Create a dictionary 'data' with the form data and music sheet content
+    data = {
+        **request.form,
+        'id': id,
+        'music_sheet': music_sheet_content
+    }
+    # Validate the data before updating the score
+    if not Score.score_validator(data):
+        os.remove(pdf_file_path)
+        return redirect(f'/score/edit/{id}')
+    # Update the score in the database
+    Score.update(data)
+    # Remove the temporary PDF file after updating
+    os.remove(pdf_file_path)
+    # Redirect to the dashboard after successful update
+    return redirect('/user/dashboard')
+
+@app.route('/score/delete/<int:id>')
+def score_delete(id):
+    if not session:
+        return redirect('/')
+    Score.delete(id)
+    return redirect('/user/dashboard')
