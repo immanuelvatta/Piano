@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Score </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+
+<body data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary justify-content-end">
+        <div class="container-fluid">
+            <h2>Add Score </h2>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <h2 class="me-3 text-primary"> {{user.full_name}}</h2>
+                <a href="/user/dashboard"><button class="btn btn-info me-2">Dashboard</button></a>
+                <a href="/user/logout"><button class="btn btn-danger me-2">Logout</button></a>
+            </div>
+        </div>
+    </nav>
+
+    <div>
+        <h1>{{ score.name }}</h1>
+        <p>Composer: {{ score.composer }}</p>
+        <p>Description: {{ score.description }}</p>
+        <p class="mt-2 text-center">Music Sheet</p>
+
+        <!-- Add the iframe to display the PDF -->
+        <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" src="{{ url_for('score_display', id=score.id) }}" width="100%" height="680" allowfullscreen></iframe>
+
+        </div>
+        
+
+    </div>
+
+
+</body>
+
+</html>

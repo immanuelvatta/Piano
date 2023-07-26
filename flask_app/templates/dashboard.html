@@ -45,7 +45,7 @@
                     <td class="text-center">{{score.name}}</td>
                     <td class="text-center">{{score.composer}}</td>
                     <td class="text-center">{{score.user.full_name}}</td>
-                    <td scope="col"><a href="/sasquatch/view/{{score.id}}"><button class="btn btn-primary me-2">View <i
+                    <td scope="col"><a href="/score/view/{{score.id}}"><button class="btn btn-primary me-2">View <i
                                     class="fa-solid fa-eye fa-spin"></i></button></a>
                         {% if user.id == score.user_id %}
                         <a href="/score/edit/{{score.id}}"><button class="btn btn-warning me-2"> Edit <i
@@ -121,6 +121,8 @@
 
     </div>
     <!-- adding tone.js library  -->
+    <!-- tone.js is an API for creating and controlling audio in web apps. It is a 
+        js library and helps you create and manage audio sources -->
     <script src="https://cdn.jsdelivr.net/npm/tone@latest/build/Tone.js"></script>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
