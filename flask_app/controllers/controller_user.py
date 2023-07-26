@@ -4,13 +4,14 @@ from flask import render_template, redirect, request, session
 
 #TODO change this
 from flask_app.models.model_user import User
-from flask_app.models.model_score import Scores
+from flask_app.models.model_score import Score
 
+# '/user/new' -> display the route with the form
 @app.route('/user/new')
 def user_new():
-    return redirect('/user/dashboard')
+    return render_template('register.html')
 
-
+# '/user/create' -> process the form from above
 @app.route('/user/create', methods=['POST'])
 def user_create():
     
@@ -19,7 +20,7 @@ def user_create():
         **request.form
     }
     if not User.validator(data):
-        return redirect('/')
+        return redirect('/user/new')
     
     
     hash_pw = bcrypt.generate_password_hash(data['password'])
@@ -51,7 +52,7 @@ def success():
         return redirect('/')
     user = User.get_one(session['email'])
 
-    scores = Scores.get_all()
+    scores = Score.get_all()
     return render_template("dashboard.html", user= user, scores = scores)
 
 
@@ -60,8 +61,8 @@ def logout():
     session.clear()
     return redirect('/')
 
-# '/user/new' -> display the route with the form
-# '/user/create' -> process the form from above
+
+
 # '/user/<int:id>' -> display the user's info -> Show
 # '/user/<int:id>/edit' -> display the user's info in a form so that they can edit it
 # '/user/<int:id>/update' -> process the edit form
