@@ -14,15 +14,11 @@ def user_new():
 # '/user/create' -> process the form from above
 @app.route('/user/create', methods=['POST'])
 def user_create():
-    
-    
     data = {
         **request.form
     }
     if not User.validator(data):
         return redirect('/user/new')
-    
-    
     hash_pw = bcrypt.generate_password_hash(data['password'])
     print(data['password'])
     data['password'] = hash_pw
@@ -31,9 +27,6 @@ def user_create():
     User.create(data)
     # session['user_id'] = user_id
     session['email'] = request.form['email']
-    
-    
-    #use session 
     return redirect('/user/dashboard')
 
 @app.route('/user/login', methods=['POST'])
@@ -43,15 +36,14 @@ def user_login():
         return redirect('/')
     else:
         session['email'] = is_valid
-    
     return redirect('/user/dashboard')
+
 
 @app.route('/user/dashboard')
 def success():
     if not session:
         return redirect('/')
     user = User.get_one(session['email'])
-
     scores = Score.get_all()
     return render_template("dashboard.html", user= user, scores = scores)
 
@@ -60,7 +52,6 @@ def success():
 def logout():
     session.clear()
     return redirect('/')
-
 
 
 # '/user/<int:id>' -> display the user's info -> Show
