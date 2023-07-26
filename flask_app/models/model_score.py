@@ -25,32 +25,24 @@ class Score:
     #* the save method will be used when we need to save a new user to our database
     @classmethod
     def create(cls, data):
-        """
-        This if successful add a new score to database and returns the new row's id
-        """
-        #read the pdf file (music sheet) content
-                
         query = """INSERT INTO scores (user_id, name, composer, description, music_sheet)
                 VALUES (%(user_id)s, %(name)s,%(composer)s,%(description)s, %(music_sheet)s);"""
         # print(data['user_id'])
         # print(len(data['music_sheet']))
         result = connectToMySQL(DATABASE).query_db(query,data)
-        print(result)
         return result
     
     @classmethod
     def get_all(cls):
-        """
-        Function doesn't take in anything but returns a list of instances of users
-        """
         query = """SELECT * FROM scores JOIN users ON scores.user_id = users.id;"""
-        #what is results?  list !! list of what? dictionaries
-        results = connectToMySQL(DATABASE).query_db(query)
-        # print(results)
-        all_scores = [] #list
         
+        results = connectToMySQL(DATABASE).query_db(query)
+        
+        # Initializing an empty list to store all the score instances.
+        all_scores = [] #list
+        # Looping through each 'user_dict' in the query results.
         for user_dict in results:
-            score_instance = cls(user_dict) # new instance of score class from a dictionary (represents a new sasquatch)
+            score_instance = cls(user_dict) 
             user_data = {
                 'id' : user_dict['users.id'],
                 'created_at' : user_dict['users.created_at'],
@@ -61,8 +53,10 @@ class Score:
                 'password' : user_dict['password']
             }
             user_instance = model_user.User(user_data) #creating an instance of user
+            # Assigning the 'user_instance' as the 'user' attribute of the 'score_instance'.
             score_instance.user = user_instance 
-            all_scores.append(score_instance) #populating the list that we assigned to the instance
+            #populating the list that we assigned to the instance
+            all_scores.append(score_instance) 
         return all_scores
     
     @classmethod
@@ -109,6 +103,6 @@ class Score:
     @staticmethod
     def score_validator(data):
         is_valid = True
-        print(data)
+        # print(data)
         #TODO fill the validator
         return is_valid
