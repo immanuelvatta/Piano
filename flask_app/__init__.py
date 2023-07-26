@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_bcrypt import Bcrypt
+import PyPDF2
 #app = instance of Flask(class)
 app = Flask(__name__)
 bcrypt = Bcrypt(app)     # we are creating an object called bcrypt, 

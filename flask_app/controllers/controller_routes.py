@@ -8,9 +8,4 @@ from flask import render_template
 @app.route('/')
 def index():
     
-    # user = None # can replace None with "" or False, or None
-    # if session:
-    #     return redirect('/user/success')
-    #     user = User.get_one({'id': session['user_id']})
-    #     session['user_id'] = user.id
     return render_template('login.html')
