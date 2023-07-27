@@ -1,8 +1,9 @@
 from flask_app import app
 import os
-from flask import render_template, redirect, request, session, Response
+from flask import render_template, redirect, request, session, Response , flash
 from flask_app.models.model_score import Score
 from flask_app.models.model_user import User
+
 
 @app.route('/score/new')
 def score_new():
@@ -14,12 +15,25 @@ def score_new():
 
 @app.route('/score/create' , methods= ['POST'])
 def score_create():
+    # Check if a music sheet file was uploaded
+    if 'music_sheet' not in request.files:
+        flash('Please upload a music sheet.', 'err_score_music_sheet')
+        return redirect('/score/new')
     # Get the uploaded music sheet from the request
     music_sheet = request.files['music_sheet']
+    # Get the filename of the music sheet
+    music_sheet_filename = music_sheet.filename
+    
+    # Validate the file extension
+    allowed_extensions = {'pdf'}
+    if '.' not in music_sheet_filename or music_sheet_filename.split('.')[-1].lower() not in allowed_extensions:
+        flash("Invalid file format. Please upload a PDF file.", 'err_score_music_sheet')
+        return redirect('/score/new')
+    
     # Read the content of the music sheet
     music_sheet_content = music_sheet.read()
     # Define the path to save the PDF file temporarily
-    pdf_file_path = f"temp/{music_sheet.filename}"
+    pdf_file_path = f"temp/{music_sheet_filename}"
     # Check if the 'temp' directory exists, if it doesn't then creates it
     if not os.path.exists('temp'):
         os.makedirs('temp')
@@ -87,9 +101,26 @@ def score_edit(id):
     return render_template('edit_score.html', user=user, score = score)
 
 
+# controller_score.py
+
+@app.route('/score/search', methods=['POST'])
+def score_search():
+    # Get the search query from the request form
+    search_query = request.form['search_query']
+    # Initialize an empty list to store the search results
+    results = []
+    # Check if the search query is not empty
+    if search_query.strip():
+        # If the search query is not empty, perform the search using the get_score_by_name method
+        results = Score.get_score_by_name(search_query)
+    # Get the number of search results
+    num_results = len(results)
+    return render_template('search_results.html', search_query=search_query, results=results, num_results = num_results )
+
+
+
 @app.route('/score/updated/<int:id>', methods=["POST"])
 def score_update(id):
-    
     if not session:
         # If not logged in, redirect to the homepage
         return redirect('/')
@@ -126,6 +157,8 @@ def score_update(id):
     os.remove(pdf_file_path)
     # Redirect to the dashboard after successful update
     return redirect('/user/dashboard')
+
+
 
 @app.route('/score/delete/<int:id>')
 def score_delete(id):
