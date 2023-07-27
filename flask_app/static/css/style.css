@@ -97,3 +97,14 @@ header .column span {
 .piano-keys .key.hide span{
     display: none;
 }
+
+.table-container{
+    height: 300px;
+    overflow-y:  auto
+}
+
+table {
+    width: 100%;
+    table-layout: fixed; /* Make the table cells have fixed width */
+    border-collapse: collapse;
+}
