@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+
+<body data-bs-theme="dark">
+    <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary justify-content-end">
+        <div class="container-fluid">
+            <h2 class="text-light">Search Results </h2>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <a class="me-3 nav-link disabled text-light" aria-disabled="true"> <i class="fa-solid fa-music"></i></a>
+                <a class="navbar-brand" href="/user/dashboard">Dashboard <i class="fa-solid fa-house-user"></i></a>
+                <a class="navbar-brand" href="/user/logout">Logout <i class="fa-solid fa-right-from-bracket fa-fade"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mt-5 container text-light border border-light">
+        <h3 class="mt-5">Showing results for <span class="text-primary animate__animated animate__flash">{{ search_query }}</span></h3>
+        {% if num_results == 0 %}
+        <p class="mb-5 animate__hinge">Found {{num_results}} results</p>
+            <p class="mb-3 ">The Music Score you're looking for does not exist in our database </p>
+            <img class="mb-3 border border-light" src=" {{ url_for ('static', filename = 'img/its-blank.gif') }}" alt="zero results" style="max-width: 100%; height: auto;">
+            <p class="mb-3"><a class="btn btn-outline-light" href="/user/dashboard">Go Home </a> </p>
+        {% else %}
+        <ul class="list-unstyled">
+            <p class="mb-5 animate__animated animate__tada">Found {{num_results}} results</p>
+            {% for result in results %}
+            <li class="mb-3"><a href="/score/view/{{result.id}}">{{ result.name }} - By ({{ result.composer }}) </a></li>
+
+            
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+
+    <script src="https://kit.fontawesome.com/37489cf723.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
