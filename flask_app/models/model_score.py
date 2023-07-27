@@ -1,12 +1,8 @@
-# import the function that will return an instance of a connection
-#       folder  folder  file                    function
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask_app import DATABASE , bcrypt
-from flask import flash
-import PyPDF2
-
 from flask_app.models import model_user
-# from flask_app.models import model_user
+from flask import flash
+import re
 
 class Score:
     
@@ -65,6 +61,15 @@ class Score:
         results = connectToMySQL(DATABASE).query_db(query,{'id': id})
         return cls(results[0])
     
+    #TODO For search function
+    @classmethod
+    def get_score_by_name(cls,search_query):
+        query = """SELECT * FROM scores WHERE name REGEXP %s;"""
+        pattern = re.escape(search_query)
+        result = connectToMySQL(DATABASE).query_db(query, (f"(?i){pattern}",))
+        matched_scores = [cls(score) for score in result]
+        return matched_scores
+    
     @classmethod
     def get_one_score(cls,id):
         query = """SELECT * FROM scores JOIN users ON scores.user_id = users.id
@@ -103,6 +108,24 @@ class Score:
     @staticmethod
     def score_validator(data):
         is_valid = True
-        # print(data)
-        #TODO fill the validator
+        # self.name = data['name']
+        # self.composer = data['composer']
+        # self.description = data['description']
+        # self.music_sheet = data['music_sheet']
+        if len(data['name']) < 3:
+            flash("Name of Composition should be at least 3 characters", 'err_score_name')
+            is_valid = False
+        if len(data['composer']) < 3:
+            flash("Composer should be at least 3 characters", 'err_score_name')
+            is_valid = False
+        if len(data['description']) < 3:
+            flash("Description should be at least 3 characters", 'err_score_name')
+            is_valid = False
+        
+        #!validate music_sheet
+        music_sheet = data.get('music_sheet')
+        if not music_sheet:
+            flash('Please upload a music sheet.', 'err_score_music_sheet')
+            is_valid = False
+        
         return is_valid
